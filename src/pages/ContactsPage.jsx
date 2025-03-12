@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts } from '../redux/operations';
+import { fetchContacts } from '../redux/contacts/operations';
 import {
   selectContacts,
   selectIsLoading,
   selectError,
-} from '../redux/selectors';
+} from '../redux/contacts/selectors';
 import ContactForm from '../components/contactForm/ContactForm';
 import ContactList from '../components/contactList/ContactList';
 import Filter from '../components/filter/Filter';

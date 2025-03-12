@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../redux/auth/authSlice';
+import { loginUser } from '../redux/auth/operations';
 import { TextField, Button, Box, Typography, Container } from '@mui/material';
 
 const LoginPage = () => {
@@ -20,6 +20,7 @@ const LoginPage = () => {
     }
 
     dispatch(loginUser(userData));
+    formData.reset();
   };
 
   return (

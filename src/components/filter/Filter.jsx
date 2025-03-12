@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { changeFilter } from '../../redux/filterSlice';
-import { selectFilter } from '../../redux/selectors';
+import { changeFilter } from '../../redux/contacts/filterSlice';
+import { selectFilter } from '../../redux/contacts/selectors';
 import PropTypes from 'prop-types';
 import { TextField, Box } from '@mui/material';
 

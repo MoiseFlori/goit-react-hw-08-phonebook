@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../redux/auth/authSlice';
+import { registerUser } from '../redux/auth/operations';
 import { TextField, Button, Box, Typography, Container } from '@mui/material';
 
 const RegisterPage = () => {
@@ -21,6 +21,7 @@ const RegisterPage = () => {
     }
 
     dispatch(registerUser(userData));
+    formData.reset();
   };
 
   return (

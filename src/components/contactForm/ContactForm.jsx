@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/operations';
-import { selectContacts } from '../../redux/selectors';
+import { addContact } from '../../redux/contacts/operations';
+import { selectContacts } from '../../redux/contacts/selectors';
 import PropTypes from 'prop-types';
 import { TextField, Button, Paper, Box } from '@mui/material';
 
@@ -13,8 +13,7 @@ const ContactForm = () => {
     e.preventDefault();
     const form = e.target;
     const name = form.name.value.trim();
-    const number = form.number.value.trim(); 
-
+    const number = form.number.value.trim();
 
     const isDuplicate = contacts.some(
       contact => contact.name.toLowerCase() === name.toLowerCase()
@@ -24,13 +23,13 @@ const ContactForm = () => {
       return;
     }
 
-    dispatch(addContact({ name, number })); 
+    dispatch(addContact({ name, number }));
     form.reset();
   };
 
   return (
     <Paper
-      sx={{ mt: 3, p: 3, maxWidth: 400, height: 'fit-content', mx: 'auto' }}
+      sx={{ mt: 3, p: 3, maxWidth: 400,  maxHeight: 400, mx: 'auto' }}
       elevation={3}
     >
       <Box

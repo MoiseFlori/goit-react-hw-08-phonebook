@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact } from '../../redux/operations';
-import { selectFilteredContacts } from '../../redux/selectors';
+import { deleteContact } from '../../redux/contacts/operations';
+import { selectFilteredContacts } from '../../redux/contacts/selectors';
 import PropTypes from 'prop-types';
 import {
   List,
@@ -20,7 +20,17 @@ const ContactList = () => {
   const handleDelete = id => dispatch(deleteContact(id));
 
   return (
-    <Paper sx={{ mt: 3, p: 2, width: '100%', maxWidth: 400, mx: 'auto' }}>
+    <Paper
+      sx={{
+        mt: 3,
+        p: 2,
+        width: '100%',
+        maxWidth: 400,
+        mx: 'auto',
+        maxHeight: 300, 
+        overflowY: 'auto', 
+      }}
+    >
       <Typography variant="h5" align="center" gutterBottom>
         Contact List
       </Typography>

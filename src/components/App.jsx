@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { fetchCurrentUser } from '../redux/auth/authSlice';
+import { fetchCurrentUser } from '../redux/auth/operations';
 
 import Navigation from '../components/auth/Navigation';
 import PrivateRoute from '../components/auth/PrivateRoute';
