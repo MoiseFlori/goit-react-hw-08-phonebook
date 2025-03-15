@@ -19,6 +19,12 @@ export const registerUser = createAsyncThunk(
       setAuthHeader(response.data.token);
       return response.data;
     } catch (error) {
+      if (error.response?.data?.code === 11000) {
+        return thunkAPI.rejectWithValue(
+          'This email is already registered. Please log in.'
+        );
+      }
+
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
@@ -32,7 +38,20 @@ export const loginUser = createAsyncThunk(
       setAuthHeader(response.data.token);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      if (error.response?.status === 400) {
+        return thunkAPI.rejectWithValue(
+          'Incorrect email or password. Please try again.'
+        );
+      }
+      if (error.response?.status === 500) {
+        return thunkAPI.rejectWithValue(
+          'Server error. Please try again later.'
+        );
+      }
+
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'An unexpected error occurred.'
+      );
     }
   }
 );
@@ -55,8 +74,8 @@ export const fetchCurrentUser = createAsyncThunk(
     const state = thunkAPI.getState();
     const token = state.auth.token;
 
-    if (!token) {
-      return thunkAPI.rejectWithValue('No token found');
+    if (!token || token === 'null' || token === '') {
+      return thunkAPI.rejectWithValue('No valid token found');
     }
 
     try {

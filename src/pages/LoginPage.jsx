@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../redux/auth/operations';
-import { TextField, Button, Box, Typography, Container } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Container,
+  Alert,
+} from '@mui/material';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleLogin = e => {
+  const handleLogin = async e => {
     e.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+
     const formData = new FormData(e.target);
     const userData = {
       email: formData.get('email'),
@@ -15,12 +27,21 @@ const LoginPage = () => {
     };
 
     if (!userData.email || !userData.password) {
-      alert('Toate câmpurile sunt obligatorii!');
+      setError('All fields are required!');
+      setIsSubmitting(false);
       return;
     }
 
-    dispatch(loginUser(userData));
-    formData.reset();
+    const resultAction = await dispatch(loginUser(userData));
+
+    if (loginUser.rejected.match(resultAction)) {
+      setError(
+        resultAction.payload || 'Invalid email or password. Please try again.'
+      );
+      setIsSubmitting(false);
+    } else {
+      setError('');
+    }
   };
 
   return (
@@ -36,6 +57,13 @@ const LoginPage = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           Login
         </Typography>
+
+        {error && (
+          <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
         <Box component="form" onSubmit={handleLogin} sx={{ width: '100%' }}>
           <TextField
             fullWidth
@@ -53,8 +81,14 @@ const LoginPage = () => {
             margin="normal"
             required
           />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
-            Login
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3 }}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Logging in...' : 'Login'}
           </Button>
         </Box>
       </Box>

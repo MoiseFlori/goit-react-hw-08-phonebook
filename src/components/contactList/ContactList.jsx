@@ -25,7 +25,7 @@ const ContactList = () => {
         mt: 3,
         p: 2,
         width: '100%',
-        maxWidth: 400,
+       maxWidth: { xs: 250, md: 400 },
         mx: 'auto',
         maxHeight: 300, 
         overflowY: 'auto', 

@@ -1,27 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../redux/auth/operations';
-import { TextField, Button, Box, Typography, Container } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Container,
+  Alert,
+  Link,
+} from '@mui/material';
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  const handleRegister = e => {
+
+  useEffect(() => {
+    const { name, email, password } = userData;
+    const isValid =
+      name.trim() !== '' && email.trim() !== '' && password.length >= 6;
+    setIsFormValid(isValid);
+  }, [userData]);
+
+  const handleChange = e => {
+    setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
+
+  const handleRegister = async e => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const userData = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-    };
+    setError('');
+    setIsSubmitting(true);
 
-    if (!userData.name || !userData.email || !userData.password) {
-      alert('Toate câmpurile sunt obligatorii!');
-      return;
+    const resultAction = dispatch(registerUser(userData));
+
+    if (registerUser.rejected.match(resultAction)) {
+      setError(
+        resultAction.payload || 'Registration failed. Please try again.'
+      );
+    } else {
+      setError('');
     }
 
-    dispatch(registerUser(userData));
-    formData.reset();
+    setIsSubmitting(false);
   };
 
   return (
@@ -37,6 +65,21 @@ const RegisterPage = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           Register
         </Typography>
+
+        {error && (
+          <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+            {error}
+            {error.includes('already registered') && (
+              <>
+      
+                <Link href="/login" sx={{ fontWeight: 'bold' }}>
+                  Go to Login
+                </Link>
+              </>
+            )}
+          </Alert>
+        )}
+
         <Box component="form" onSubmit={handleRegister} sx={{ width: '100%' }}>
           <TextField
             fullWidth
@@ -44,6 +87,8 @@ const RegisterPage = () => {
             name="name"
             margin="normal"
             required
+            value={userData.name}
+            onChange={handleChange}
           />
           <TextField
             fullWidth
@@ -52,6 +97,8 @@ const RegisterPage = () => {
             type="email"
             margin="normal"
             required
+            value={userData.email}
+            onChange={handleChange}
           />
           <TextField
             fullWidth
@@ -60,9 +107,22 @@ const RegisterPage = () => {
             type="password"
             margin="normal"
             required
+            value={userData.password}
+            onChange={handleChange}
+            helperText={
+              userData.password.length < 6
+                ? 'Password must be at least 6 characters long.'
+                : ''
+            }
           />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
-            Register
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3 }}
+            disabled={!isFormValid || isSubmitting}
+          >
+            {isSubmitting ? 'Registering...' : 'Register'}
           </Button>
         </Box>
       </Box>
